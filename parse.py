@@ -82,7 +82,9 @@ def parseWorksheet():
 def main():
     definitions_queries = parseProfileCharacteristics()
     queries = parseWorksheet()
-    for k, v in queries.items():
-        print(k,v)
+    
+    # Comment this out for debugging
+    # for k, v in queries.items():
+    #     print(k,v)
 if __name__ == '__main__':
     main()
