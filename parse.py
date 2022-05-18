@@ -50,7 +50,7 @@ def parseWorksheet():
 
             # missing adding type and job descriptor (need to change ER!!)
             elif worksheet == "Survey Questions New":
-                query = f"""INSERT INTO Questions (SurveyId, QNumber, Text) VALUES ({rowValues[0]}, {rowValues[1]}, "{rowValues[2]}");"""
+                query = f"""INSERT INTO Questions (SurveyId, QNumber, Text, Type, JobDescriptor) VALUES ({rowValues[0]}, {rowValues[1]}, "{rowValues[2]}", {rowValues[3]}, "{rowValues[4]}");"""
 
             queryList.append(query)
             # rowValues.clear()
