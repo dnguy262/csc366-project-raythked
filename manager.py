@@ -6,17 +6,17 @@ import pymysql
 def executeQuery(query):
     connection = pymysql.connect(
                 user     = "group5a",
-                password = "_}2nSW6'%?3hyr9Z",
+                password = "_}2nSW6%?3hyr9Z",
                 host     = "mysql.labthreesixfive.com",
                 db       = "group5a",
                 port     = 3306
     )
     # connection = pymysql.connect(
-    #     user     = "jcavalca466",
-    #     password = "jcavalca466985",
+    #     user     = "root",
+    #     password = "",
     #     host     = "localhost",
-    #     db       = "jcavalca466",
-    #     port     = 9090 # comment out this if running on frank
+    #     db       = "onet_job",
+    #     port     = 3306 # comment out this if running on frank
     # )
     with connection.cursor() as cursor:
         cursor.execute(query)
