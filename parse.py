@@ -45,7 +45,9 @@ def parseWorksheet():
                 rowValues.append(str(cell_obj.value))
             
             # Some worksheets start in 2nd or 3rd row, this will catch empty rows
-            if not rowValues[0]:
+            if worksheet == "Survey Questions New":
+                print(rowValues)
+            if rowValues[0] == 'None':
                 continue
             
             query = ""
@@ -63,6 +65,7 @@ def parseWorksheet():
 
             # Replacing Python's None to MySQL's Null for missing fields
             query = query.replace('"None"', "Null")
+            query = query.replace('None', "Null")
             
             if worksheet not in queries.keys():
                 queries[worksheet] = []
