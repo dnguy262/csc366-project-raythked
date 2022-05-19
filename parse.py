@@ -59,7 +59,7 @@ def parseWorksheet():
                 query = f"""INSERT INTO Questions (SurveyId, QNumber, Text, Type, JobDescriptor) VALUES ({rowValues[0]}, {rowValues[1]}, "{rowValues[2]}", {rowValues[3]}, "{rowValues[4]}");"""
 
             elif worksheet == "QuestionResponses":
-                query = f"""INSERT INTO Choices (SurveyId, QuestionId, CNumber, Value) VALUES ({rowValues[0]}, {rowValues[1]}, {rowValues[2]}, "{rowValues[3]}");"""
+                query = f"""INSERT INTO Choices (SurveyId, QNumber, CNumber, Value) VALUES ({rowValues[0]}, {rowValues[1]}, {rowValues[2]}, "{rowValues[3]}");"""
 
             # Replacing Python's None to MySQL's Null for missing fields
             query = query.replace('"None"', "Null")

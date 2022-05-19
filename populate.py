@@ -16,7 +16,11 @@ def main():
         with open(filename, 'r') as file:
             queries = [q.strip('\n') for q in file.readlines()]
             for query in queries:
-                executeQuery(query)
-
+                try:
+                    executeQuery(query)
+                except:
+                    print(query)
+                    executeQuery(query)
+                    
 if __name__ == '__main__':
     main()
