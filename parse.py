@@ -45,8 +45,6 @@ def parseWorksheet():
                 rowValues.append(str(cell_obj.value))
             
             # Some worksheets start in 2nd or 3rd row, this will catch empty rows
-            if worksheet == "Survey Questions New":
-                print(rowValues)
             if rowValues[0] == 'None':
                 continue
             
