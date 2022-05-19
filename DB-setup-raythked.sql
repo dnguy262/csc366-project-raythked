@@ -1,7 +1,7 @@
 CREATE TABLE if not exists Surveys (Id INT AUTO_INCREMENT PRIMARY KEY, Title VARCHAR(255) NOT NULL, Name  VARCHAR(255), Description TEXT);
 CREATE TABLE if not exists JobDescriptors (Id int AUTO_INCREMENT PRIMARY KEY, Characteristic VARCHAR(255) UNIQUE, Dimension VARCHAR(50), Description TEXT);
-CREATE TABLE if not exists Questions (Text TEXT NOT NULL, SurveyId INT, QNumber INT UNIQUE, Type INT, JobDescriptor varchar(255), PRIMARY KEY (SurveyId, QNumber), FOREIGN KEY (SurveyId) REFERENCES Surveys(Id), FOREIGN KEY (JobDescriptor) REFERENCES JobDescriptors(Characteristic));
-CREATE TABLE if not exists Choices (Text TEXT NOT NULL, Value TEXT, QNumber INT, SurveyId INT, CNumber INT, PRIMARY KEY (SurveyId, QNumber, CNumber), FOREIGN KEY (QNumber) REFERENCES Questions(QNumber), FOREIGN KEY (SurveyId) REFERENCES Questions(QNumber));
+CREATE TABLE if not exists Questions (Text TEXT NOT NULL, SurveyId INT, QNumber INT, Type INT, JobDescriptor varchar(255), PRIMARY KEY (SurveyId, QNumber), FOREIGN KEY (SurveyId) REFERENCES Surveys(Id));
+CREATE TABLE if not exists Choices (Text TEXT NOT NULL, Value TEXT, QNumber INT, SurveyId INT, CNumber INT, PRIMARY KEY (SurveyId, QNumber, CNumber), FOREIGN KEY (SurveyId, QNumber) REFERENCES Questions(SurveyId, QNumber));
 CREATE TABLE if not exists UserAccounts (Id INT AUTO_INCREMENT PRIMARY KEY,UserName VARCHAR(255) NOT NULL,Notes TEXT,Category ENUM("Administrator", "Student", "Professional", "Interviewer"));
 CREATE TABLE if not exists Profiles (Id INT AUTO_INCREMENT PRIMARY KEY,Name VARCHAR(255) NOT NULL,UserLabel VARCHAR(255),Category ENUM("Experience", "ONET", "Ideal"),Code VARCHAR(20) UNIQUE);
 CREATE TABLE if not exists SurveySubmissions (Id INT AUTO_INCREMENT PRIMARY KEY,Status ENUM("Provisional","Reviewed"),SurveyId INT, ExperienceProfileId INT,FOREIGN KEY (SurveyId) REFERENCES Surveys(Id),FOREIGN KEY (ExperienceProfileId) REFERENCES Profiles(Id));
