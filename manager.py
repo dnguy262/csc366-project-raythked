@@ -12,11 +12,11 @@ def executeQuery(query):
                 port     = 3306
     )
     # connection = pymysql.connect(
-    #     user     = "jcavalca466",
-    #     password = "jcavalca466985",
+    #     user     = "root",
+    #     password = "",
     #     host     = "localhost",
-    #     db       = "jcavalca466",
-    #     port     = 9090 # comment out this if running on frank
+    #     db       = "onet_job",
+    #     port     = 3306 # comment out this if running on frank
     # )
     with connection.cursor() as cursor:
         cursor.execute(query)
