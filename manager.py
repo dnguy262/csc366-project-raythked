@@ -6,7 +6,7 @@ import pymysql
 def executeQuery(query):
     connection = pymysql.connect(
                 user     = "group5a",
-                password = "_}2nSW6'%?3hyr9Z",
+                password = "_}2nSW6%?3hyr9Z",
                 host     = "mysql.labthreesixfive.com",
                 db       = "group5a",
                 port     = 3306
