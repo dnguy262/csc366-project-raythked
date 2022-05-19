@@ -83,8 +83,15 @@ def main():
     definitions_queries = parseProfileCharacteristics()
     queries = parseWorksheet()
     
-    # Comment this out for debugging
-    # for k, v in queries.items():
-    #     print(k,v)
+    
+    all_queries = definitions_queries
+    for queries in queries.values():
+        all_queries.extend(queries)
+    
+    all_queries = [q + "\n" for q in all_queries]
+    
+    with open('insert_stms_excel.sql', 'w') as file:
+        file.writelines(all_queries)
+
 if __name__ == '__main__':
     main()
