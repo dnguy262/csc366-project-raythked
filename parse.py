@@ -45,7 +45,7 @@ def parseWorksheet():
                 rowValues.append(str(cell_obj.value))
             
             # Some worksheets start in 2nd or 3rd row, this will catch empty rows
-            if not rowValues[0]:
+            if rowValues[0] == 'None':
                 continue
             
             query = ""
@@ -59,10 +59,11 @@ def parseWorksheet():
                 query = f"""INSERT INTO Questions (SurveyId, QNumber, Text, Type, JobDescriptor) VALUES ({rowValues[0]}, {rowValues[1]}, "{rowValues[2]}", {rowValues[3]}, "{rowValues[4]}");"""
 
             elif worksheet == "QuestionResponses":
-                query = f"""INSERT INTO Choices (SurveyId, QuestionId, CNumber, Value) VALUES ({rowValues[0]}, {rowValues[1]}, {rowValues[2]}, "{rowValues[3]}");"""
+                query = f"""INSERT INTO Choices (SurveyId, QNumber, CNumber, Value) VALUES ({rowValues[0]}, {rowValues[1]}, {rowValues[2]}, "{rowValues[3]}");"""
 
             # Replacing Python's None to MySQL's Null for missing fields
             query = query.replace('"None"', "Null")
+            query = query.replace('None', "Null")
             
             if worksheet not in queries.keys():
                 queries[worksheet] = []
@@ -83,8 +84,15 @@ def main():
     definitions_queries = parseProfileCharacteristics()
     queries = parseWorksheet()
     
-    # Comment this out for debugging
-    # for k, v in queries.items():
-    #     print(k,v)
+    
+    all_queries = definitions_queries
+    for queries in queries.values():
+        all_queries.extend(queries)
+    
+    all_queries = [q + "\n" for q in all_queries]
+    
+    with open('insert_stms_excel.sql', 'w') as file:
+        file.writelines(all_queries)
+
 if __name__ == '__main__':
     main()

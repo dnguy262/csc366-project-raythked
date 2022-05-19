@@ -11,7 +11,7 @@ import { ONETJobDetailResponse } from './types';
  */
 export const createSql = (data: Array<ONETJobDetailResponse>) => {
     let onetJobInfoInserts = 'INSERT INTO ONETJobInfo(Code, Title, IsStem, Description, BrightOutlook, Green) \n\tVALUES';
-    let onetJobProfilesInserts = 'INSERT INTO Profile(Name, Category, Code) \n\tVALUES';
+    let onetJobProfilesInserts = 'INSERT INTO Profiles(Name, Category, Code) \n\tVALUES';
 
     data.forEach(({ code, description, tags, title }, index) => {
         const { bright_outlook, green } = tags;

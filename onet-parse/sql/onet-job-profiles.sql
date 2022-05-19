@@ -1,4 +1,4 @@
-INSERT INTO Profile(Name, Category, Code) 
+INSERT INTO Profiles(Name, Category, Code) 
 	VALUES
 	('Actuaries', 'ONET', '15-2011.00'),
 	('Acupuncturists', 'ONET', '29-1291.00'),
