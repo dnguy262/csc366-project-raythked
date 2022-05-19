@@ -10,15 +10,15 @@ import { ONETJobDetailResponse } from './types';
  * - onet-job-info.sql
  */
 export const createSql = (data: Array<ONETJobDetailResponse>) => {
-    let onetJobInfoInserts = 'INSERT INTO ONETJobInfo(Code, Title, IsStem, Description, BrightOutlook, Green) \nVALUES';
-    let onetJobProfilesInserts = 'INSERT INTO Profile(Name, Category, Code) \nVALUES';
+    let onetJobInfoInserts = 'INSERT INTO ONETJobInfo(Code, Title, IsStem, Description, BrightOutlook, Green) \n\tVALUES';
+    let onetJobProfilesInserts = 'INSERT INTO Profile(Name, Category, Code) \n\tVALUES';
 
     data.forEach(({ code, description, tags, title }, index) => {
         const { bright_outlook, green } = tags;
         // escapes any single quotes in the description 
         const escapedDescription = description.replace(/'/g, "''");
-        onetJobInfoInserts += `\n('${code}', '${title}', true, '${escapedDescription}', ${bright_outlook}, ${green})`;
-        onetJobProfilesInserts += `\n('${title}', 'ONET', '${code}')`;
+        onetJobInfoInserts += `\n\t('${code}', '${title}', true, '${escapedDescription}', ${bright_outlook}, ${green})`;
+        onetJobProfilesInserts += `\n\t('${title}', 'ONET', '${code}')`;
         onetJobInfoInserts += index === data.length - 1 ? ';' : ',';
         onetJobProfilesInserts += index === data.length - 1 ? ';' : ',';
     });
