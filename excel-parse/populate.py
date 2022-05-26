@@ -28,7 +28,7 @@ def main():
     # Creates tables
     subprocess.run("python3 manager.py -c".split())
 
-    filenames = ['./insert_stms_excel.sql', './onet-parse/sql/onet-job-info.sql', './onet-parse/sql/onet-job-profiles.sql']
+    filenames = ['./insert_stms_excel.sql', '../onet-parse/sql/onet-job-info.sql', '../onet-parse/sql/onet-job-profiles.sql']
 
     # Creates insert file from excel, if doesn't exists
     if not exists(filenames[0]):
@@ -36,7 +36,7 @@ def main():
 
      # Creates insert file from ONET, if doesn't exists
     if not exists(filenames[1]) or not exists(filenames[2]):
-        subprocess.run("cd onet-parse && yarn run parse:script".split())
+        subprocess.run("cd ../onet-parse && yarn run parse:script".split())
 
     # Executing insert stmts
     for filename in filenames:
