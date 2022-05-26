@@ -3,6 +3,22 @@ from os.path import exists
 from manager import executeQuery
 
 # This file populates our DB w/ excel and ONET data.
+def executeFile(filename):
+    with open(filename, 'r') as file:
+        queries = [q.strip('\n') for q in file.readlines()]
+        
+        # Handling another format for the file
+        if 'onet' in filename:
+            queries = [' '.join(queries)]
+
+        for query in queries:
+            try:
+                executeQuery(query)
+            except:
+                print(query)
+                executeQuery(query)
+
+        print(f"Done inserting from {filename}")
 
 def main():
 
@@ -24,21 +40,12 @@ def main():
 
     # Executing insert stmts
     for filename in filenames:
-        with open(filename, 'r') as file:
-            
-            queries = [q.strip('\n') for q in file.readlines()]
-            
-            # Handling another format for the file
-            if 'onet' in filename:
-                queries = [' '.join(queries)]
+        executeFile(filename)
+    
+    # Creates insert file from onet excel, if doesn't exists
+    if not exists('insert_stms_onet.sql'):
+        subprocess.run("python3 parse_onet_mapping.py".split())
+    executeFile('insert_stms_onet.sql')
 
-            for query in queries:
-                try:
-                    executeQuery(query)
-                except:
-                    print(query)
-                    executeQuery(query)
-
-            print(f"Done inserting from {filename}")
 if __name__ == '__main__':
     main()
