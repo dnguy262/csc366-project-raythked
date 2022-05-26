@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from manager import executeQuery
 
+# Executes any Select Query
 def executeSelect(query):
     connection = pymysql.connect(
                 user     = "group5a",
@@ -21,7 +22,7 @@ def executeSelect(query):
     connection.commit()
     return cursor.fetchall()
 
-
+# Gets ONET descriptor codes for each job descriptor
 def get_characteristic_codes():
     path = './onet_mapping.xlsx'
  
@@ -42,17 +43,21 @@ def get_characteristic_codes():
                 profile_characteristic = cell_obj.value
 
             if cell_obj.hyperlink:
+
+                # Get ONET descriptor code from link
                 descriptor_link = cell_obj.hyperlink.target
                 descriptor_code = descriptor_link.split("/")[-1]
                 if descriptor_code:
                     descriptor_codes.append(descriptor_code)
         
         if descriptor_codes:
+
             # Last character is the profile characteristic id
             profile_characteristic_codes[profile_characteristic.split()[-1]] = descriptor_codes
     return profile_characteristic_codes
 
-def get_onet_codes():
+# Selects all profile ids and job codes from ONET Profile
+def get_onet_profiles():
     query = """SELECT Id, Code FROM Profiles WHERE Category = 'ONET' """
     ids, codes = zip(*executeSelect(query))
     return ids, codes
@@ -103,9 +108,10 @@ def fetch_onet_job(profile_id, job_code, profile_characteristic_codes):
 
 def main():
     profile_characteristic_codes = get_characteristic_codes()
-    profile_ids, job_codes = get_onet_codes()
+    profile_ids, job_codes = get_onet_profiles()
     queries = ["INSERT INTO DescriptorScores (Score, Importance, JobDescriptorId, ProfileId) VALUES "]
 
+    # Fetches each onet job in a thread
     print("fetching onet job descriptors ...")
     with ThreadPoolExecutor() as executor:
         for job_queries in executor.map(fetch_onet_job, profile_ids, job_codes, [profile_characteristic_codes]*len(profile_ids)):
@@ -115,6 +121,7 @@ def main():
     queries[-1] = queries[-1][:-1] + ";"
     queries = [q + "\n" for q in queries]
     
+    # Creates sql file
     with open('insert_stms_onet.sql', 'w') as file:
         file.writelines(queries)
 
