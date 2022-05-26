@@ -42,9 +42,11 @@ def main():
     for filename in filenames:
         executeFile(filename)
     
-    # Creates insert file from onet excel, if doesn't exists
+    # Creates insert file from onet excel, if doesn't exists.
+    # This needs to have tables (such as Profiles) already populated.
     if not exists('insert_stms_onet.sql'):
         subprocess.run("python3 parse_onet_mapping.py".split())
+        
     executeFile('insert_stms_onet.sql')
 
 if __name__ == '__main__':
