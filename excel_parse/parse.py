@@ -85,68 +85,90 @@ def parseWorksheet():
 """
     This function updates the queries dictionary, and does not return anything
 """
-def parseUREExperienceSheet(sheet_obj, queries)
+def parseUREExperienceSheet(sheet_obj, queries):
 
     # initialize sheet queries list
     if "URE Experience" not in queries.keys():
         queries["URE Experience"] = []
 
-    # create mapping from question column number to questionIds
-    max_col = sheet_obj.max_column
-    max_row = sheet_obj.max_row
-    colNoToId = {}
-    for col in range(2, max_row + 1):
-        cell_obj = sheet_obj.cell(row = 1, column = col) # header row
+    # hard coded max_col and max_row because rows and columns numbers were inaccurat, not sure why
+    max_col = 96
+    max_row = 27
 
-        # query sql with questionText to get questionId
-        questionText = str(cell_obj.value)
-        selectQuery = f"""
-                       SELECT QNumber
-                       FROM Questions
-                       WHERE Text = '{questionText}' and SurveyId = {1};
-                       """ # UREExperience --> SurveyId = 1
+    #None as of now... need to create surveySubmissions (?)
+    surveySubmissionId = "Null"
+    for row in range(3, max_row + 1):
+        rowValues = []
+        questionId = 1
+        query = ""
+        for col in range(3, max_col + 1):
+            cell_obj = sheet_obj.cell(row = row, column = col)
+            rowValues.append(str(cell_obj.value))
+            query = f"""INSERT INTO Responses (SurveySubmissionId, QuestionId, SelectedChoiceId) VALUES ({surveySubmissionId}, {questionId}, {cell_obj.value});"""
+            questionId += 1
+            queries["URE Experience"].append(query)
 
-        questionId = executeSelectQuery(selectQuery) # TODO: finish executeSelectQuery function
-        colNoToId[col] = questionId # mapping from col number to questionId
+# def parseUREExperienceSheet(sheet_obj, queries)
 
-    # insert survey submissions
-    for row in range(2, max_row + 1): # skip first two rows, each row is a survey submission
+#     # initialize sheet queries list
+#     if "URE Experience" not in queries.keys():
+#         queries["URE Experience"] = []
 
-        surveyId = 1 # since this is URE survey
-        query = f"""INSERT INTO SurveySubmissions (Id?, SurveyId)
-                    VALUES ({}, {surveyId});"""
-        # TODO: do i create survey submission id here? or does mysql auto generate it because of auto increment
-        # TODO: if SurveySubmissionId is auto-incremented, need to retrieve it in order to create Responses table
-        queries["URE Experience"].append[query]
+#     # create mapping from question column number to questionIds
+#     max_col = sheet_obj.max_column
+#     max_row = sheet_obj.max_row
+#     colNoToId = {}
+#     for col in range(2, max_row + 1):
+#         cell_obj = sheet_obj.cell(row = 1, column = col) # header row
 
-        # insert responses
-        for col in range(2, max_col + 1): # skip first two columns
+#         # query sql with questionText to get questionId
+#         questionText = str(cell_obj.value)
+#         selectQuery = f"""
+#                        SELECT QNumber
+#                        FROM Questions
+#                        WHERE Text = '{questionText}' and SurveyId = {1};
+#                        """ # UREExperience --> SurveyId = 1
 
-            surveySubmissionId = None # TODO
-            questionId = colNoToId[col]
-            selectedChoiceId = cell_obj.value # TODO: does this need to be cast as int?
-            query = f"""INSERT INTO Responses (SurveySubmissionId, QuestionId, SelectedChoiceId)
-                        VALUES ({surveySubmissionId}, {questionId}, {selectedChoiceId});"""
-            queries["URE Experience"].append[query]
+#         questionId = executeSelectQuery(selectQuery) # TODO: finish executeSelectQuery function
+#         colNoToId[col] = questionId # mapping from col number to questionId
+
+#     # insert survey submissions
+#     for row in range(2, max_row + 1): # skip first two rows, each row is a survey submission
+
+#         surveyId = 1 # since this is URE survey
+#         query = f"""INSERT INTO SurveySubmissions (Id?, SurveyId)
+#                     VALUES ({}, {surveyId});"""
+#         # TODO: do i create survey submission id here? or does mysql auto generate it because of auto increment
+#         # TODO: if SurveySubmissionId is auto-incremented, need to retrieve it in order to create Responses table
+#         queries["URE Experience"].append[query]
+
+#         # insert responses
+#         for col in range(2, max_col + 1): # skip first two columns
+
+#             surveySubmissionId = None # TODO
+#             questionId = colNoToId[col]
+#             selectedChoiceId = cell_obj.value # TODO: does this need to be cast as int?
+#             query = f"""INSERT INTO Responses (SurveySubmissionId, QuestionId, SelectedChoiceId)
+#                         VALUES ({surveySubmissionId}, {questionId}, {selectedChoiceId});"""
+#             queries["URE Experience"].append[query]
 
 
-def executeSelectQuery(query):
-    connection = pymysql.connect(
-                user     = "group5a",
-                password = "_}2nSW6%?3hyr9Z",
-                host     = "mysql.labthreesixfive.com",
-                db       = "group5a",
-                port     = 3306
-    )
+# def executeSelectQuery(query):
+#     connection = pymysql.connect(
+#                 user     = "group5a",
+#                 password = "_}2nSW6%?3hyr9Z",
+#                 host     = "mysql.labthreesixfive.com",
+#                 db       = "group5a",
+#                 port     = 3306
+#     )
 
-    with connection.cursor() as cursor:
-        cursor.execute(query)
+#     with connection.cursor() as cursor:
+#         cursor.execute(query)
 
-    # TODO: add way to return the results from a select query
+#     # TODO: add way to return the results from a select query
 
-    connection.commit()
-    connection.close()
-
+#     connection.commit()
+#     connection.close()
 
 def main():
     definitions_queries = parseProfileCharacteristics()
