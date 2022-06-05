@@ -1,45 +1,41 @@
-# Next.js with TypeScript example
+# JobMatchr - Career Exploration Database Application
+# By: Jin Choi
 
-## How to use
+[Figma Prototype Link](https://www.figma.com/file/EbEWoEPSk4kpIrV87nosT5/CED-M?node-id=14%3A3)
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+Built with **Next.js**
 
-<!-- #default-branch-switch -->
+<br/>
 
-```sh
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/nextjs-with-typescript
-cd nextjs-with-typescript
+## Setup Instructions
+
+**Make sure you have yarn globally installed.** Alternatively you can use npm.
+
+*Install dependencies:*
+``` 
+yarn 
 ```
 
-Install it and run:
+or
 
-```sh
+```
 npm install
+```
+
+*Run dev server:*
+```
+yarn dev
+```
+or
+```
 npm run dev
 ```
 
-or:
-
-<!-- #default-branch-switch -->
-
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/nextjs-with-typescript)
-
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui/material-ui/tree/master/examples/nextjs-with-typescript)
-
-## The idea behind the example
-
-The project uses [Next.js](https://github.com/vercel/next.js), which is a framework for server-rendered React apps.
-It includes `@mui/material` and its peer dependencies, including `emotion`, the default style engine in MUI v5. If you prefer, you can [use styled-components instead](https://mui.com/material-ui/guides/interoperability/#styled-components).
-
-## The link component
-
-Next.js has [a custom Link component](https://nextjs.org/docs/api-reference/next/link).
-The example folder provides adapters for usage with MUI.
-More information [in the documentation](https://mui.com/material-ui/guides/routing/#next-js).
-
-## What's next?
-
-<!-- #default-branch-switch -->
-
-You now have a working example project.
-You can head back to the documentation, continuing browsing it from the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+*Build static pages:*
+```
+yarn build
+```
+or
+```
+npm run build
+```
