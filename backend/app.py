@@ -56,9 +56,10 @@ def get_surveys():
 
     return jsonify(response)
 
-@app.route("/api/post/survey")
+@app.route("/api/submit/survey", methods=['POST'])
 def post_survey():
-    # data = json.loads(request.data)
+    # TODO : Test w/ real data from frontend
+    # data = request.get_json()
     # survey_id = int(data['survey_id'])
     survey_id = 1
 
@@ -82,6 +83,8 @@ def post_survey():
     db.insertDescriptorScores(profile_id, qnumbers, cnumbers, survey_id)
     print("inserted DescriptorScores")
 
-    response = {"profile_id": profile_id, "sub_id": sub_id}
+
+    # TODO : Call recomendation engine and return 
+    response = {}
     
     return jsonify(response)
