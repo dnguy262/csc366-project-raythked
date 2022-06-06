@@ -1,7 +1,5 @@
-from tkinter import N
-from urllib import response
-from flask import Flask
-import json
+from flask import Flask, jsonify, request
+import json 
 
 import db
 
@@ -13,7 +11,7 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
-@app.route("/surveys")
+@app.route("/api/get/surveys", methods=['GET'])
 def get_surveys():
     query = """
         SELECT
@@ -56,6 +54,34 @@ def get_surveys():
                 "Value": c_val
             }
 
-    return json.dumps(response)
+    return jsonify(response)
 
-get_surveys()
+@app.route("/api/post/survey")
+def post_survey():
+    # data = json.loads(request.data)
+    # survey_id = int(data['survey_id'])
+    survey_id = 1
+
+    # Creates anonymous profile for each submission
+    profile_id = db.createProfile()
+    print("created Profile")
+    print(profile_id)
+
+    # Creates anonymous profile for each submission
+    sub_id = db.createSurveySubmission(survey_id, profile_id)
+    print("created SurveySubmission")
+
+    # qnumbers, cnumbers = zip(*data['results'])
+    qnumbers = [12, 13]
+    cnumbers = [3, 4]
+    # Populates Responses Table
+    db.insertResponses(sub_id, qnumbers, cnumbers)
+    print("inserted Responses")
+
+    # Populates DescriptorScores Tables
+    db.insertDescriptorScores(profile_id, qnumbers, cnumbers, survey_id)
+    print("inserted DescriptorScores")
+
+    response = {"profile_id": profile_id, "sub_id": sub_id}
+    
+    return jsonify(response)
