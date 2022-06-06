@@ -16,9 +16,11 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "axios": "^0.27.2",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-spinners": "^0.12.0"
   },
   "devDependencies": {
     "@types/node": "latest",
