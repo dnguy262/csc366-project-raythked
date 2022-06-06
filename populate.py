@@ -46,7 +46,10 @@ def main():
 
     # Executing insert stmts
     for filename in filenames:
-        executeFile(filename)
+        try:
+            executeFile(filename)
+        except:
+            print(f"error in {filename}")
     
     # Creates insert file from onet excel, if doesn't exist.
     # This needs to have tables (such as Profiles) already populated.
