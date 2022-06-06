@@ -11,7 +11,7 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
-@app.route("/api/get/surveys", methods=['GET'])
+@app.route("/api/surveys", methods=['GET'])
 def get_surveys():
     query = """
         SELECT
@@ -56,7 +56,7 @@ def get_surveys():
 
     return jsonify(response)
 
-@app.route("/api/submit/survey", methods=['POST'])
+@app.route("/api/survey", methods=['POST'])
 def post_survey():
     # TODO : Test w/ real data from frontend
     # data = request.get_json()
