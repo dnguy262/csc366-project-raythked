@@ -12,5 +12,5 @@ const surveyApiClient = axios.create({
 
 export const surveyApi = {
     getSurveys: () => surveyApiClient.get('/api/surveys').then(res => res.data).catch((err) => { throw Error(err) }),
-    postSurveys: (data: SurveyRequestBody) => surveyApiClient.post('/surveys', { data }),
+    postSurveys: (data: SurveyRequestBody) => surveyApiClient.post('/api/surveys', { data }),
 };
