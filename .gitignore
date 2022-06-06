@@ -1,3 +1,5 @@
+.DS_Store
+/**/.DS_Store
 
 .vscode/settings.json
 __pycache__/manager.cpython-38.pyc
