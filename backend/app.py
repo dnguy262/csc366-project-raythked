@@ -63,9 +63,7 @@ def get_surveys():
 @app.route("/api/survey", methods=['POST'])
 def post_survey():
     
-    # TODO : Test w/ real data from frontend
     request_data = request.get_json()
-    # survey_id = 1
     survey_id = int(request_data['survey_id'])
     resultObjList = request_data['results'] # [{qnumber, cnumber}, {qnumber, cnumber}]
     qnumbers = []

@@ -13,6 +13,7 @@ import { surveyApi } from "../../modules/surveys/api/survey.api";
 import { questionText } from "../../modules/constants/question-text.constant";
 import { SurveyData } from "../../modules/surveys/types/survey.interface";
 import { LOCAL_STORAGE_TOKEN } from "../../modules/constants/local-storage.constant";
+import { dummyData } from "../../modules/constants/test.constant";
 
 const surveyStyles = (theme: Theme) => css`
   .submit-button {
@@ -74,10 +75,10 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
   const updateRequestObj = () => {
     const disciplineValue = document.querySelector("input")?.value;
     console.log(disciplineValue);
+    // skip first one
     if (disciplineValue) {
       requestObj.results["1"] = +disciplineValue;
     }
-    // skip first one
 
     for (const qNumber of Object.keys(Questions)
       .sort((a, b) => +a - +b)
@@ -101,22 +102,26 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
       return;
     }
     updateRequestObj();
-    const results = Object.values(requestObj.results);
-    if (results.length < 94) {
-      alert(
-        'There are unanswered questions. Select "Prefer not to Say" if you do not wish to answer.'
-      );
-      return;
-    }
+    const results = Object.entries(requestObj.results).map(([qnumber, cnumber]) => ({ qnumber: +qnumber, cnumber}));
+
+    // COMMENTED OUT FOR DEMO PURPOSES
+    // if (results.length < 94) {
+    //   alert(
+    //     'There are unanswered questions. Select "Prefer not to Say" if you do not wish to answer.'
+    //   );
+    //   return;
+    // }
     const data = {
       ...requestObj,
-      results: Object.values(requestObj.results),
+      results,
     };
     surveyApi
-      .postSurveys(data)
+      .postSurveys(dummyData)
+      // COMMENTED OUT FOR DEMO PURPOSES
+      // .postSurveys(...data)
       .then((res) => {
         // save to localStorage
-        localStorage.setItem(LOCAL_STORAGE_TOKEN, JSON.stringify(res));
+        localStorage.setItem(LOCAL_STORAGE_TOKEN, JSON.stringify(res.data));
       })
       .then(() => {
         router.push("/recommendations");
@@ -187,7 +192,7 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
           </Typography>
           <br />
           {questionsArray
-            .slice(12, 94) // TODO: MAGIC NUMBERS BAD
+            .slice(11, 94) // TODO: MAGIC NUMBERS BAD
             .map(([qNumber, { Choices, Text }], i) => (
               <RadioQuestion
                 key={qNumber}
