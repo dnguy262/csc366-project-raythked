@@ -22,6 +22,15 @@ or
 npm install
 ```
 
+### Running for Production/Demo:
+
+```
+yarn production
+```
+
+### Running for Local Development: 
+
+
 *Run dev server:*
 ```
 yarn dev

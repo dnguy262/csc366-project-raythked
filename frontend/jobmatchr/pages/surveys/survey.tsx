@@ -1,18 +1,18 @@
+import { useContext, useEffect, useRef, useState } from "react";
 import { css, Theme } from "@emotion/react";
-import { Button, Container, FormControl, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
+
 import { Loading } from "../../modules/loading";
 import { SurveyContext } from "../../modules/providers/surveys.provider";
 import { useLocalStorage } from "../../modules/providers/window.provider";
 import { RadioQuestion } from "../../modules/questions/radio.questions";
 import { SelectQuestion } from "../../modules/questions/select.questions";
 import { surveyApi } from "../../modules/surveys/api/survey.api";
-import { questionText } from "../../modules/surveys/constants/question-text.constant";
+import { questionText } from "../../modules/constants/question-text.constant";
 import { SurveyData } from "../../modules/surveys/types/survey.interface";
-
-const LOCAL_STORAGE_TOKEN = 'recommendations';
+import { LOCAL_STORAGE_TOKEN } from "../../modules/constants/local-storage.constant";
 
 const surveyStyles = (theme: Theme) => css`
   .submit-button {
@@ -37,10 +37,10 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
 
   useEffect(() => {
     if (router.isReady) {
-      const { surveyId } = router.query;
+      const { id } = router.query;
       // TODO: correct typing here, got lazy
-      setSurveyId(surveyId as any);
-      requestObj.survey_id = +surveyId!;
+      setSurveyId(id as any);
+      requestObj.survey_id = +id!;
     }
   }, [router.isReady]);
 
@@ -57,7 +57,18 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
     Name === "" ||
     Object.keys(Questions).length === 0
   ) {
-    return <Loading />;
+    return (
+      <Container
+        maxWidth="xl"
+        css={css`
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+        `}
+      >
+        <Loading />
+      </Container>
+    );
   }
 
   const updateRequestObj = () => {
@@ -82,6 +93,13 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
 
   // used for final conversion into data that POST request expects
   const submissionAdapter = () => {
+    if (surveyId !== "1") {
+      alert(
+        "This survey is not yet implemented. Navigating back to Surveys page."
+      );
+      router.push("/surveys");
+      return;
+    }
     updateRequestObj();
     const results = Object.values(requestObj.results);
     if (results.length < 94) {
@@ -101,7 +119,7 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
         localStorage.setItem(LOCAL_STORAGE_TOKEN, JSON.stringify(res));
       })
       .then(() => {
-        router.push('/recommendations');
+        router.push("/recommendations");
       })
       .catch((err) => {
         alert(`Failed to submit survey. \n Error: ${err}`);
@@ -111,28 +129,36 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
   const questionsArray = Object.entries(Questions);
 
   return (
-    <Container css={surveyStyles} maxWidth="lg" {...props}>
+    <Container css={surveyStyles} maxWidth="lg" sx={{ my: 4 }} {...props}>
       <Typography variant="h2" mb={4}>
         {Name}
       </Typography>
       <Typography variant="body1">{Description}</Typography>
       <br />
-      <Typography>This survey has four sections:</Typography>
-      <br />
-      {questionText.header.legend.map((row) => (
-        <Typography key={row} fontWeight={700}>
-          {row}
-        </Typography>
-      ))}
-      <br />
-      <Typography fontWeight={700}>
-        {questionText.header.description}
-      </Typography>
+      {surveyId === "1" && (
+        <>
+          <Typography>This survey has four sections:</Typography>
+          <br />
+          {questionText.header.legend.map((row) => (
+            <Typography key={row} fontWeight={700}>
+              {row}
+            </Typography>
+          ))}
+          <br />
+          <Typography fontWeight={700}>
+            {questionText.header.description}
+          </Typography>
+        </>
+      )}
       <hr />
-      <Typography variant="h4">{questionText.sections[1].title}</Typography>
-      <Typography variant="body1">
-        {questionText.sections[1].description}
-      </Typography>
+      {surveyId === "1" && (
+        <>
+          <Typography variant="h4">{questionText.sections[1].title}</Typography>
+          <Typography variant="body1">
+            {questionText.sections[1].description}
+          </Typography>
+        </>
+      )}
       <br />
       {/* This is also gross 🤮 */}
       <SelectQuestion
@@ -149,23 +175,29 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
           choices={Choices}
         />
       ))}
-      <hr />
-      <Typography variant="h4">{questionText.sections[2].title}</Typography>
-      <Typography variant="body1">
-        {questionText.sections[2].description[0]}
-      </Typography>
-      <Typography variant="body1" fontWeight={700}>
-        {questionText.sections[2].description[1]}
-      </Typography>
-      <br />
-      {questionsArray.slice(12, 94).map(([qNumber, { Choices, Text }], i) => (
-        <RadioQuestion
-          key={qNumber}
-          qNumber={qNumber}
-          label={`${qNumber}. ${Text}`}
-          choices={Choices}
-        />
-      ))}
+      {surveyId === "1" && (
+        <>
+          <hr />
+          <Typography variant="h4">{questionText.sections[2].title}</Typography>
+          <Typography variant="body1">
+            {questionText.sections[2].description[0]}
+          </Typography>
+          <Typography variant="body1" fontWeight={700}>
+            {questionText.sections[2].description[1]}
+          </Typography>
+          <br />
+          {questionsArray
+            .slice(12, 94) // TODO: MAGIC NUMBERS BAD
+            .map(([qNumber, { Choices, Text }], i) => (
+              <RadioQuestion
+                key={qNumber}
+                qNumber={qNumber}
+                label={`${qNumber}. ${Text}`}
+                choices={Choices}
+              />
+            ))}
+        </>
+      )}
       <br />
       <div className="submit-button">
         <Button onClick={submissionAdapter} variant="contained" size="large">
