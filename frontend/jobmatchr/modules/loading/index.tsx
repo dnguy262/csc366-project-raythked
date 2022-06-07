@@ -7,7 +7,6 @@ export const Loading = ({ ...props }: Props) => {
   return (
     <div
       css={css`
-        width: 100vw;
         height: 100%;
         display: flex;
         align-items: center;

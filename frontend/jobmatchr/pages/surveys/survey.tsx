@@ -28,6 +28,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 };
 const UserSurvey: NextPage<Props> = ({ ...props }) => {
   const [surveyId, setSurveyId] = useState("");
+  const [ loadingRecommendations, setLoadingRecommendations ] = useState(false);
   const router = useRouter();
   const localStorage = useLocalStorage();
 
@@ -74,7 +75,6 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
 
   const updateRequestObj = () => {
     const disciplineValue = document.querySelector("input")?.value;
-    console.log(disciplineValue);
     // skip first one
     if (disciplineValue) {
       requestObj.results["1"] = +disciplineValue;
@@ -115,6 +115,7 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
       ...requestObj,
       results,
     };
+    setLoadingRecommendations(true);
     surveyApi
       .postSurveys(dummyData)
       // COMMENTED OUT FOR DEMO PURPOSES
@@ -124,9 +125,11 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
         localStorage.setItem(LOCAL_STORAGE_TOKEN, JSON.stringify(res.data));
       })
       .then(() => {
+        setLoadingRecommendations(false);
         router.push("/recommendations");
       })
       .catch((err) => {
+        setLoadingRecommendations(false);
         alert(`Failed to submit survey. \n Error: ${err}`);
       });
   };
@@ -204,8 +207,9 @@ const UserSurvey: NextPage<Props> = ({ ...props }) => {
         </>
       )}
       <br />
+      {loadingRecommendations && <Loading />}
       <div className="submit-button">
-        <Button onClick={submissionAdapter} variant="contained" size="large">
+        <Button onClick={submissionAdapter} variant="contained" size="large" disabled={loadingRecommendations}>
           <Typography variant="h6">Submit Survey</Typography>
         </Button>
       </div>
