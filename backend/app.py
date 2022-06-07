@@ -1,5 +1,6 @@
 from pyparsing import identchars
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from numpy import dot
 from numpy.linalg import norm
 from operator import itemgetter
@@ -8,6 +9,7 @@ import pymysql
 import db
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello_world():
