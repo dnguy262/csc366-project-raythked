@@ -9,11 +9,9 @@ import db
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
-
 
 @app.route("/api/surveys", methods=['GET'])
 def get_surveys():
