@@ -27,7 +27,7 @@ const surveyStyles = (theme: Theme) => css`
 const Surveys: NextPage = () => {
   const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.currentTarget.value);
-    console.log('hello this does nothing atm');
+    console.log('hello this does nothing atm, thanks for trying.');
   }
 
   return (

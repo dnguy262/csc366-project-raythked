@@ -6,6 +6,12 @@ const Submissions: NextPage = () => {
   return (
     <MatchrPage>
       <Typography variant="h1">Submissions</Typography>
+      <Typography variant="h2">Status: Not part of MVP</Typography>
+      <Typography variant="h3">
+        A page for viewing a user's past submissions. Note: since we are working
+        on anonymous we were thinking about displaying data from local storage
+        to be shown here but it is low on the priority list.
+      </Typography>
     </MatchrPage>
   );
 };
