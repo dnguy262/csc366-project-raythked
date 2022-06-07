@@ -16,10 +16,16 @@ python3 -m venv venv
 
 *Install dependencies:*
 ```
-pip install Flask
+pip3 install Flask
 ```
 ```
-pip install pymysql
+pip3 install pymysql
+```
+```
+pip3 install pyparsing
+```
+```
+pip3 install numpy
 ```
 
 *Run Flask App:*
