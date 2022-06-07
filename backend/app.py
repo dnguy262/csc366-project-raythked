@@ -1,6 +1,7 @@
 from pyparsing import identchars
 from flask import Flask, jsonify, request
-from scipy import spatial
+from numpy import dot
+from numpy.linalg import norm
 from operator import itemgetter
 import json 
 import pymysql
@@ -103,14 +104,23 @@ def post_survey():
                     port     = 3306
         )
         with connection.cursor() as cursor:
-            cursor.execute(query)
+            rows_count = cursor.execute(query)
         connection.commit()
-        return cursor.fetchall()
+        connection.close()
+        if rows_count > 0:
+            return cursor.fetchall()
+        else:
+            return None
 
     def get_onet_profiles():
-        query = """SELECT Id FROM Profiles WHERE Category = 'ONET' """
+        query = """SELECT Id FROM Profiles WHERE Category = 'ONET';"""
         ids = executeSelect(query)
-        return ids
+
+        ids_lst = []
+        for id in ids:
+            ids_lst.append(id[0])
+
+        return ids_lst
 
     # """
     # WITH t1 AS (SELECT JobDescriptorId, Score from DescriptorScores where ProfileId = 1 order by JobDescriptorId),
@@ -121,21 +131,26 @@ def post_survey():
     # for every ONET job
     onet_job_ids = get_onet_profiles()
     onet_cosine_similarity = {}
+    
+    #job_id is a tuple...
     for job_id in onet_job_ids: 
+        print("calculating jobid =" + str(job_id))
         query = f"""
             WITH t1 AS (SELECT JobDescriptorId, Score FROM DescriptorScores WHERE ProfileId = {profile_id}),
             t2 AS (SELECT JobDescriptorId, Score FROM DescriptorScores WHERE ProfileId = {job_id})
             SELECT t1.JobDescriptorId, t1.Score, t2.Score FROM t1 JOIN t2 ON t1.JobDescriptorId = t2.JobDescriptorId ORDER BY t1.JobDescriptorId;
             """ # first col is experience profile, second col is onet job profile
 
-        job_descriptor_ids, experience_scores, onet_scores = zip(*executeSelect(query)) # executeSelect returns [(1, 6, 7), ...]
-        
-        experience_scores_list = list(experience_scores)
-        onet_scores_list = list(onet_scores)
+        #need to deal with empty sets
+        if executeSelect(query) is not None:
+            job_descriptor_ids, experience_scores, onet_scores = zip(*executeSelect(query)) # executeSelect returns [(1, 6, 7), ...]
+            experience_scores_list = list(experience_scores)
+            onet_scores_list = list(onet_scores)
 
-        similarity_score = 1 - spatial.distance.cosine(experience_scores_list, onet_scores_list)
-        onet_cosine_similarity[job_id] = similarity_score # dictionary: onetjobid --> similarity score 
-        
+            similarity_score = dot(experience_scores_list, onet_scores_list)/(norm(experience_scores_list)*norm(onet_scores_list))
+            onet_cosine_similarity[job_id] = similarity_score # dictionary: onetjobid --> similarity score 
+    
+    print("length of onet cosine similarity= " + str(len(onet_cosine_similarity)))
     #take top 10 values from onet_cosine_similarity
     #RESOURCE: https://www.geeksforgeeks.org/python-n-largest-values-in-dictionary/
     N = 10
@@ -143,28 +158,31 @@ def post_survey():
 
     # get names of recommended jobs
     recommended_job_list = []
-    for job_id in results.keys():
+    
+    job_ids_list = [int(k) for k in results.keys()]
+
+    for job_id in job_ids_list:
 
         query = f"""
             SELECT Name
             FROM Profiles
             WHERE Id = {job_id};
             """
-        job_name = executeSelect(query)[0] # (Name)
+        job_name = executeSelect(query)[0][0]
 
         query = f"""
             SELECT Code
             FROM Profiles
             WHERE Id = {job_id};
         """
-        job_code = executeSelect(query)[0] # (Code)
+        job_code = executeSelect(query)[0][0] # (Code)
 
         query = f"""
             SELECT Description
             FROM ONETJobInfo
-            WHERE Code = {job_code};
+            WHERE Code = "{job_code}";
         """
-        job_desc = executeSelect(query)[0] # (Desc)
+        job_desc = executeSelect(query)[0][0] # (Desc)
 
         job_obj = {
             "job_id": job_id,
@@ -176,5 +194,5 @@ def post_survey():
 
         recommended_job_list.append(job_obj)
     
-    return jsonify(recommended_job_list) # TODO: does this need to be jsonified?
+    return jsonify(recommended_job_list) 
 
