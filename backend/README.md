@@ -21,6 +21,9 @@ pip install Flask
 ```
 pip install pymysql
 ```
+```
+pip install scipy
+```
 
 *Run Flask App:*
 ```
