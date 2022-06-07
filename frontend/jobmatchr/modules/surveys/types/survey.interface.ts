@@ -5,7 +5,8 @@ export interface Survey {
 export interface SurveyData {
     Description: string,
     Name: string,
-    Questions: Record<string, Question>
+    Questions: Record<string, Question>,
+    Title: string
 }
 
 export type Question = {

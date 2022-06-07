@@ -4,11 +4,24 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Link from "next/link";
 const navbarStyles = (currentPage: string, theme: Theme) => css`
   margin: ${theme.spacing(2, 0)};
+  
+  .app-title {
+    cursor: pointer;
+    transition: all 0.3s;
+
+    :hover {
+      transform: translateX(5px);
+      color: #777;
+    }
+  }
+
   .MuiList-root {
     flex-wrap: wrap;
     display: flex;
     justify-content: flex-end;
     flex: 1 1 auto;
+    
+
     > li {
       max-width: fit-content;
       white-space: nowrap;
@@ -45,9 +58,11 @@ export const Navbar: React.FC<Props> = ({ currentPage, ...props }) => {
         </Typography>
       </Grid>
       <Grid item xs={12} display="flex" flexWrap="wrap" alignItems={"baseline"}>
-        <Typography variant="h2" display="inline" mr={2}>
-          JobMatchr
-        </Typography>
+        <Link passHref href="/surveys">
+          <Typography className="app-title" variant="h2" display="inline" mr={2}>
+            JobMatchr
+          </Typography>
+        </Link>
         <List dense>
           <Link passHref href="/surveys">
             <ListItem className="surveys">
